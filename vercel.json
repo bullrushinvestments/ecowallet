@@ -1,0 +1,141 @@
+import type { BuildCommand, EnvironmentVariables, HeaderRule } from './types'; // Assuming custom types are defined in a separate file
+
+interface CacheControlSettings {
+  matchPath: string;
+  rules: Array<{
+    urlPattern: string;
+    headers: Array<{ key: string; value: string }>;
+  }>;
+}
+
+interface DeployConfig {
+  build: BuildCommand;
+  env: EnvironmentVariables;
+  redirects: Array<{
+    source: string;
+    destination: string;
+    statusCode?: number;
+  }>;
+  headers: HeaderRule[];
+  cacheControl: CacheControlSettings;
+  frameworkSpecific: {
+    vercel: Record<string, any>;
+    netlify: Record<string, any>;
+  };
+}
+
+export const deployConfig: DeployConfig = {
+  build: {
+    command: 'next build',
+    output: '.output'
+  },
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    SAAS_SECRET_KEY: process.env.SAAS_SECRET_KEY
+  },
+  redirects: [
+    { source: '/old-url', destination: '/new-url' }
+  ],
+  headers: [
+    {
+      source: '/api/:path*',
+      headers: [
+        { key: 'Access-Control-Allow-Credentials', value: 'true' },
+        { key: 'Access-Control-Allow-Origin', value: '*' },
+        { key: 'Vary', value: 'Origin' }
+      ]
+    }
+  ],
+  cacheControl: {
+    matchPath: '/_next/static/:path*',
+    rules: [
+      {
+        urlPattern: '**/*.js',
+        headers: [
+          { key: 'Cache-Control', value: 'max-age=86400, must-revalidate' }
+        ]
+      },
+      {
+        urlPattern: '**/*.css',
+        headers: [
+          { key: 'Cache-Control', value: 'max-age=31536000' }
+        ]
+      }
+    ]
+  },
+  frameworkSpecific: {
+    vercel: {},
+    netlify: {}
+  }
+};
+
+import type { BuildCommand, EnvironmentVariables, HeaderRule } from './types'; // Assuming custom types are defined in a separate file
+
+interface CacheControlSettings {
+  matchPath: string;
+  rules: Array<{
+    urlPattern: string;
+    headers: Array<{ key: string; value: string }>;
+  }>;
+}
+
+interface DeployConfig {
+  build: BuildCommand;
+  env: EnvironmentVariables;
+  redirects: Array<{
+    source: string;
+    destination: string;
+    statusCode?: number;
+  }>;
+  headers: HeaderRule[];
+  cacheControl: CacheControlSettings;
+  frameworkSpecific: {
+    vercel: Record<string, any>;
+    netlify: Record<string, any>;
+  };
+}
+
+export const deployConfig: DeployConfig = {
+  build: {
+    command: 'next build',
+    output: '.output'
+  },
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    SAAS_SECRET_KEY: process.env.SAAS_SECRET_KEY
+  },
+  redirects: [
+    { source: '/old-url', destination: '/new-url' }
+  ],
+  headers: [
+    {
+      source: '/api/:path*',
+      headers: [
+        { key: 'Access-Control-Allow-Credentials', value: 'true' },
+        { key: 'Access-Control-Allow-Origin', value: '*' },
+        { key: 'Vary', value: 'Origin' }
+      ]
+    }
+  ],
+  cacheControl: {
+    matchPath: '/_next/static/:path*',
+    rules: [
+      {
+        urlPattern: '**/*.js',
+        headers: [
+          { key: 'Cache-Control', value: 'max-age=86400, must-revalidate' }
+        ]
+      },
+      {
+        urlPattern: '**/*.css',
+        headers: [
+          { key: 'Cache-Control', value: 'max-age=31536000' }
+        ]
+      }
+    ]
+  },
+  frameworkSpecific: {
+    vercel: {},
+    netlify: {}
+  }
+};
